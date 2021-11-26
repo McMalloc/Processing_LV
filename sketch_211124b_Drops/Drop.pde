@@ -1,34 +1,43 @@
 class Drop {
-  int maxSize = 3000;
-  float size = 0; 
-  int birthTime = millis();
-  int lifespan = 5000;
-  float relativeAge = 0;
-  boolean invisible = false;
-  
-  color youngColor;
-  color oldColor;
-  
-  float x;
-  float y;
-  
-  Drop(float x, float y) {
-    this.x = x;
-    this.y = y;
+  int posX;
+  int posY;
+  color startColor;
+  color endColor;
+  boolean invisible;
+  float size;
+  int birthTime;
+  int lifeSpan = 3000;
+
+  Drop(int x, int y) {
+    posX = x;
+    posY = y;
     
-    youngColor = palette[round(random(0, palette.length - 1))];
-    oldColor = palette[round(random(0, palette.length - 1))];
+    // Jeder Drop merkt sich, zu welcher Millisekunde er erstellt worden ist
+    birthTime = millis();
+    
+    size = random(1000, 5000);
+    
+    // siehe Main für die Funktion
+    startColor = randomColor();
+    endColor = randomColor();
   }
   
   void display() {
-    if (!invisible) {
-      relativeAge = (millis() - birthTime) / (float)lifespan;
-      size = maxSize * relativeAge;
-      fill(lerpColor(youngColor, oldColor, relativeAge * 3), 255 * (1 - relativeAge));
-      noStroke();
-      circle(x, y, size);
-      
-      if (size > maxSize) invisible = true;
+    // das aktuelle Alter in Millisekunden
+    float currentAge = (float)millis() - birthTime;
+    // Das Verhältnis von Alter zu Lebenserwartung ist das relative Alter zwischen 0 und 1
+    float relativeAge = currentAge / (float)lifeSpan;
+    
+    // Wenn der Drop zu alt wird, muss Processing ihn nicht mehr transparent zeichnen
+    if (relativeAge > 1) {
+      invisible = true;
     }
+        
+    // Zeichenparameter anhand des relativen Alters manipulieren
+    fill(
+      lerpColor(startColor, endColor, relativeAge * 3),
+      (1 - relativeAge) * 255
+    );
+    circle(posX, posY, relativeAge * size);
   }
 }

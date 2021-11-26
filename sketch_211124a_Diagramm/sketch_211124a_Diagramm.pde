@@ -15,7 +15,6 @@ color yellow = color(204, 255, 0);
 // serialEvent wird aufgerufen, wenn das weiter oben über bufferUntil definierte Zeichen empfangen wird.
 // Dann wird der Inhalt des seriellen Buffers in portStream geschrieben.
 void serialEvent(Serial myPort) {
-  // message = trim(myPort.readString());
   String message = trim(myPort.readString());
   String prefix = message.substring(0,1);
   String value = message.substring(2);
